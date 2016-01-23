@@ -82,10 +82,10 @@ protected:
 public:
 	SymbolDB() {}
 	virtual ~SymbolDB() {}
-	virtual Symbol *GetSymbolFromAddr(u32 addr) { return nullptr; }
-	virtual Symbol *AddFunction(u32 startAddr) { return nullptr; }
+	virtual Symbol* GetSymbolFromAddr(u32 addr) { return nullptr; }
+	virtual Symbol* AddFunction(u32 startAddr) { return nullptr; }
 
-	void AddCompleteSymbol(const Symbol &symbol);
+	void AddCompleteSymbol(const Symbol& symbol);
 
 	void PopulateSymbolComments();
 
@@ -101,10 +101,10 @@ public:
 			return nullptr;
 	}
 
-	const XFuncMap &Symbols() const { return functions; }
-	XFuncMap &AccessSymbols() { return functions; }
+	const XFuncMap& Symbols() const { return functions; }
+	XFuncMap& AccessSymbols() { return functions; }
 
-	void Clear(const char *prefix = "");
+	void Clear(const char* prefix = "");
 	void List();
 	void Index();
 };
