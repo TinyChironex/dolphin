@@ -485,6 +485,7 @@ void CCodeView::OnPaint(wxPaintEvent& event)
 			const std::string& operands = dis[1];
 			std::string desc;
 			std::string comment = m_symbol_db->GetCommentFromAddress(address);
+			bool OutsideBranch = 0;
 
 			// look for hex strings to decode branches
 			std::string hex_str;
@@ -503,8 +504,14 @@ void CCodeView::OnPaint(wxPaintEvent& event)
 				branches[numBranches++].dst = (int)(rowY1 + ((s64)(u32)offs - (s64)(u32)address) * m_rowHeight / m_align + m_rowHeight / 2);
 				desc = StringFromFormat("-->%s", m_debugger->GetDescription(offs).c_str());
 
-				// the -> arrow illustrations are purple
-				ctx->SetFont(DebuggerFont, wxTheColourDatabase->Find("PURPLE"));
+				// Check if the branch travels to another function
+				if (m_debugger->GetDescription(offs) != m_debugger->GetDescription(address))
+				{
+					OutsideBranch = true;
+				}
+
+				// the -> arrow illustrations are dark blue
+				ctx->SetFont(DebuggerFont, wxTheColourDatabase->Find("NAVY"));
 			}
 			else
 			{
@@ -529,7 +536,12 @@ void CCodeView::OnPaint(wxPaintEvent& event)
 
 			if (!m_plain)
 			{
-				ctx->SetFont(DebuggerFont, *wxBLUE);
+				if (OutsideBranch)
+					ctx->SetFont(DebuggerFont, *wxBLUE);
+				else if (hex_str.length() == VALID_BRANCH_LENGTH)
+					ctx->SetFont(DebuggerFont, wxTheColourDatabase->Find("NAVY"));
+				else
+					ctx->SetFont(DebuggerFont, *wxBLACK);
 
 				//char temp[256];
 				//UnDecorateSymbolName(desc,temp,255,UNDNAME_COMPLETE);
